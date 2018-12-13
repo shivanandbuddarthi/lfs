@@ -1,0 +1,65 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{creditDocId!=null ? 'Update' : 'Add'}} Credit</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <!--<ion-list>
+
+    <ion-item>
+      <ion-label floating>User</ion-label>
+      <ion-select name="creditUser" [(ngModel)]="creditUser">
+        <ion-option value="Shivanand" selected>Shivanand</ion-option>
+        <ion-option value="Naresh">Naresh</ion-option>
+        <ion-option value="Sathyanarayana">Sathyanarayana</ion-option>
+        <ion-option value="Mahesh">Mahesh</ion-option>
+        <ion-option value="Vinod">Vinod</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Description</ion-label>
+      <ion-input name="creditDesc" type="text" value="" [(ngModel)]="creditDesc" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Date</ion-label>
+      <ion-datetime name="creditDate" displayFormat="MM/DD/YYYY" pickerFormat="YYYY/MM/DD" [(ngModel)]="creditDate" required></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Amount</ion-label>
+      <ion-input name="creditAmount" type="number" value="" [(ngModel)]="creditAmount" required></ion-input>
+    </ion-item>
+
+  </ion-list>-->
+
+  <form [formGroup]="creditForm" (ngSubmit)="addUpdateCredit()">
+    <ion-item>
+      <ion-label floating>User</ion-label>
+      <ion-select formControlName="userId" [disabled]="creditDocId!=null">
+        <ion-option *ngFor="let user of allUsers" [value]="user.userId">{{user.firstName}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Description</ion-label>
+      <ion-input type="text" formControlName="desc"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Date</ion-label>
+      <ion-datetime displayFormat="MM/DD/YYYY" pickerFormat="YYYY/MM/DD" formControlName="date"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Amount</ion-label>
+      <ion-input type="number" formControlName="amount"></ion-input>
+    </ion-item>
+    <div padding>
+      <button ion-button type="submit" block [disabled]="!creditForm.valid">{{creditDocId!=null ? 'Update' : 'Add'}}</button>
+    </div>
+  </form>
+
+</ion-content>

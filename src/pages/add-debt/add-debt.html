@@ -1,0 +1,59 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{debtDocId!=null ? 'Update' : 'Add'}} Debt</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <!--<ion-list>
+
+    <ion-item>
+      <ion-label floating>User</ion-label>
+      <ion-select name="debtUser" [(ngModel)]="debtUser">
+        <ion-option *ngFor="let user of allUsers" [value]="user.firstName">{{user.firstName}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Description</ion-label>
+      <ion-input name="debtDesc" type="text" value="" [(ngModel)]="debtDesc" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Date</ion-label>
+      <ion-datetime name="debtDate" displayFormat="MM/DD/YYYY" pickerFormat="YYYY/MM/DD" [(ngModel)]="debtDate" required></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Amount</ion-label>
+      <ion-input name="debtAmount" type="number" value="" [(ngModel)]="debtAmount" required></ion-input>
+    </ion-item>-->
+
+  <form [formGroup]="debtForm" (ngSubmit)="addUpdateDebt()">
+    <ion-item>
+      <ion-label floating>User</ion-label>
+      <ion-select formControlName="userId" [disabled]="debtDocId!=null">
+        <ion-option *ngFor="let user of allUsers" [value]="user.userId">{{user.firstName}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Description</ion-label>
+      <ion-input type="text" formControlName="desc"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Date</ion-label>
+      <ion-datetime displayFormat="MM/DD/YYYY" pickerFormat="YYYY/MM/DD" formControlName="date"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Amount</ion-label>
+      <ion-input type="number" formControlName="amount"></ion-input>
+    </ion-item>
+    <div padding>
+      <button ion-button type="submit" block [disabled]="!debtForm.valid">{{debtDocId!=null ? 'Update' : 'Add'}}</button>
+    </div>
+  </form>
+
+</ion-content>

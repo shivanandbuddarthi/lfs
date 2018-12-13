@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Debts</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list no-lines *ngIf="loggedInUser">
+    <ion-item>
+      <ion-thumbnail item-start>
+        <img src="assets/imgs/myAvatar.svg">
+      </ion-thumbnail>
+      <h2>{{loggedInUser?.firstName}} {{loggedInUser.lastName}}</h2>
+      <h3>{{loggedInUser.userId}}</h3>
+      <p>{{loggedInUser.dateOfBirth | date}}</p>
+      <p>{{loggedInUser.gender}}</p>
+      <h6>
+        Total Debt:
+        <strong>{{totalDebt | currency:'INR' }}</strong>
+      </h6>
+    </ion-item>
+  </ion-list>
+
+  <hr/>
+  <transaction-list [trasactions]="debts" [config]="transactionListconfig" (updateEvent)="goToUpdateDebtPage($event)" (deleteEvent)="deleteDebt($event)"></transaction-list>
+
+</ion-content>
+
+<ion-footer text-center>
+  <button *ngIf="loggedInUser?.admin" ion-button color="primary" (click)="goToAddDebtPage()">Add Debt</button>
+</ion-footer>

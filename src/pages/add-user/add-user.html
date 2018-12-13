@@ -1,0 +1,47 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{userDocId!=null ? 'Update' : 'Add'}} User</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <form [formGroup]="userForm" (ngSubmit)="addUpdateUser()">
+    <ion-item>
+      <ion-label floating>First Name</ion-label>
+      <ion-input type="text" formControlName="firstName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Last Name</ion-label>
+      <ion-input type="text" formControlName="lastName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Email</ion-label>
+      <ion-input type="text" formControlName="email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Phone</ion-label>
+      <ion-input type="text" formControlName="phoneNumber"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Date of Birth</ion-label>
+      <ion-datetime displayFormat="MM/DD/YYYY" pickerFormat="YYYY/MM/DD" formControlName="dateOfBirth"></ion-datetime>
+    </ion-item>
+    <ion-list radio-group formControlName="gender">
+      <ion-item>
+        <ion-label>Male</ion-label>
+        <ion-radio value="Male"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Female</ion-label>
+        <ion-radio value="Female"></ion-radio>
+      </ion-item>
+    </ion-list>
+    <div padding>
+      <button ion-button type="submit" block [disabled]="userForm.touched && !userForm.valid">{{userDocId!=null ? 'Update' : 'Add'}}</button>
+    </div>
+  </form>
+</ion-content>

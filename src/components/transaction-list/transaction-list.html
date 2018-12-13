@@ -1,0 +1,18 @@
+<ion-list class="transaction-list">
+  <ion-item *ngFor="let trasaction of trasactions">
+    <h3>{{trasaction.date | date:mediumDate}}</h3>
+    <p *ngIf="config.showUser">{{trasaction.userId}}</p>
+    <p>{{trasaction.desc}}</p>
+    <p item-end [class]="trasaction.type?.toLowerCase()">
+      <span>{{trasaction.amount | currency:'INR':symbol}}</span>
+      <small>{{trasaction.type}}</small>
+    </p>
+    <div *ngIf="config.showButtons">
+      <button ion-button clear icon-only title="Update" (click)="updateEvent.emit(trasaction)">
+        <ion-icon name='create' is-active="false"></ion-icon>
+      </button>
+      <button ion-button color="danger" clear icon-only title="Delete" (click)="deleteEvent.emit(trasaction)">
+        <ion-icon name='trash' is-active="false"></ion-icon>
+      </button>
+    </div>
+  </ion-item>

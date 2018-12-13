@@ -1,17 +1,52 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>
+      User Home
+    </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+  <ion-list no-lines *ngIf="displayUser?.firstName">
+    <ion-item>
+      <ion-thumbnail item-start>
+        <img src="assets/imgs/myAvatar.svg">
+      </ion-thumbnail>
+      <h2>{{displayUser?.firstName}} {{displayUser.lastName}}</h2>
+      <h3>{{displayUser.userId}}</h3>
+      <p>{{displayUser.dateOfBirth | date}}</p>
+      <p>{{displayUser.gender}}</p>
+
+      <div *ngIf="loggedInUser.admin && loggedInUser!=displayUser">
+        <button ion-button clear title="Update" (click)="goToUpdateUserPage(user)">
+          <ion-icon name='settings' is-active="false"></ion-icon>
+          &nbsp;Update
+        </button>
+        <button ion-button color="danger" clear icon-only title="Delete" (click)="deleteUser(user)">
+          <ion-icon name='trash' is-active="false"></ion-icon>
+          &nbsp;Delete
+        </button>
+      </div>
+    </ion-item>
+  </ion-list>
+
+  <!--<ion-card class="UserCard" text-center padding>
+    <p>Available balance</p>
+    <h1>{{totalCredit - totalDebt | currency:'INR'}}</h1>
+  </ion-card>-->
+
+  <ion-badge>
+    <p>Outstanding Balance</p>
+    <h1>{{totalCredit - totalDebt | currency:'INR'}}</h1>
+  </ion-badge>
+
+  <hr/>
+  <transaction-list [trasactions]="debts.concat(credits)?.sort(sortByDate)" [config]="transactionListconfig" (updateEvent)="updateTransaction($event)"
+    (deleteEvent)="deleteTransaction($event)"></transaction-list>
+
 </ion-content>
+
+<ion-footer text-center *ngIf="loggedInUser?.admin && user?.firstName">
+  <button ion-button color="secondary" (click)="goToAddCreditPage()">Add Credit</button>
+  <button ion-button color="danger" (click)="goToAddDebtPage()">Add Debt</button>
+</ion-footer>

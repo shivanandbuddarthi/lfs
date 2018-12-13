@@ -1,0 +1,44 @@
+<!--
+  Generated template for the UsersPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Users</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <button ion-item *ngFor="let user of users" (click)="gotToUserDetailsPage(user)">
+      <ion-thumbnail item-start>
+        <img src="assets/imgs/myAvatar.svg">
+        <!--<img src="https://firebasestorage.googleapis.com/v0/b/test-aaa75.appspot.com/o/shivanand.jpg?alt=media&token=e9f56b42-50b2-4ab6-b64d-777d607a92cc"
+          (click)="gotToUserDetailsPage(user)">-->
+      </ion-thumbnail>
+      <h2>{{user.firstName}}</h2>
+      <!--<h3>{{user.userId}}</h3>
+      <p>{{getUserAge(user.dateOfBirth)}} {{user.gender}}</p>
+      <p>Total Outstading: 500</p>-->
+      <ion-badge [color]="user.totalCredit >= user.totalDebt ? 'secondary' : 'danger'">
+        {{(user.totalCredit - user.totalDebt) | currency:'INR'}}
+      </ion-badge>
+      <!--<br/>
+      <button ion-button clear icon-only title="Update" (click)="goToUpdateUserPage(user)">
+        <ion-icon name='settings' is-active="false"></ion-icon>
+      </button>
+      <button ion-button color="danger" clear icon-only title="Delete" (click)="deleteUser(user)">
+        <ion-icon name='trash' is-active="false"></ion-icon>
+      </button>-->
+    </button>
+  </ion-list>
+</ion-content>
+
+<ion-footer text-center>
+  <button ion-button color="primary" (click)="gotToAddUserPage()">Add User</button>
+</ion-footer>
