@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Platform } from 'ionic-angular';
 import { DebtsProvider } from '../../providers/debts/debts';
 import { Debt } from '../../model/debt';
 import { AddDebtPage } from '../add-debt/add-debt';
 import { User } from '../../model/user';
 import { UsersProvider } from '../../providers/users/users';
 import { CommonsProvider } from '../../providers/commons/commons';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 @Component({
   selector: 'page-debts',
   templateUrl: 'debts.html',
+  providers: [NativeStorage]
 })
 export class DebtsPage {
 
@@ -19,11 +21,39 @@ export class DebtsPage {
   loggedInUser: User;
   transactionListconfig: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams
-    , private debtsProvider: DebtsProvider, private usersProvider: UsersProvider
+  constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage, private platform: Platform,
+    private debtsProvider: DebtsProvider, private usersProvider: UsersProvider
     , private commonsProvider: CommonsProvider) {
 
-    this.getUser(window.sessionStorage.getItem('userId'));
+    this.platform.ready()
+      .then(readySource => {
+        this.commonsProvider.showLoading();
+        this.getLoggedInUser(readySource, this);
+      });
+  }
+
+  getLoggedInUser(readySource: string, debtsPage: DebtsPage) {
+    if (readySource == "dom") {
+      if (window.localStorage.getItem('loggedInUserId')) {
+        debtsPage.getUser(window.localStorage.getItem('loggedInUserId'));
+      }
+    }
+    else {
+      debtsPage.nativeStorage.getItem('loggedInUser')
+        .then(data => {
+          console.log(data);
+          debtsPage.loggedInUser = data;
+
+          debtsPage.transactionListconfig = {
+            showUser: debtsPage.loggedInUser.admin,
+            showButtons: debtsPage.loggedInUser.admin
+          }
+          console.log(debtsPage.loggedInUser)
+          debtsPage.getDebts();
+        }, error => {
+          console.error(error);
+        });
+    }
   }
 
   getUser(userId: string) {
@@ -64,9 +94,11 @@ export class DebtsPage {
               }, this
             );
           }
+          this.commonsProvider.hideLoading();
         },
         error => {
-          console.error(error)
+          console.error(error);
+          this.commonsProvider.hideLoading();
         }
       );
   }
@@ -109,7 +141,7 @@ export class DebtsPage {
   }
 
   deleteDebtConfirm(debtObj) {
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.debtsProvider.getDebtDocument(debtObj).subscribe(
       data => {
         if (data.docs.length > 0) {
@@ -128,9 +160,11 @@ export class DebtsPage {
         else {
           console.error("Document doesn't exist");
         }
+        this.commonsProvider.hideLoading();
       },
       error => {
         console.error(error);
+        this.commonsProvider.hideLoading();
       }
     );
 

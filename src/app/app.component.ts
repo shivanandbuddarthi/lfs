@@ -4,12 +4,13 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { TabsPage } from '../pages/tabs/tabs';
+import { LoginPage } from '../pages/login/login';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = TabsPage;
+  rootPage: any = LoginPage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
@@ -17,10 +18,10 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
-      let shivanand = 'shivanand@lfs.com';
+      /*let shivanand = 'shivanand@lfs.com';
       let naresh = 'naresh@lfs.com';
       let mahesh = 'mahesh@lfs.com';
-      window.sessionStorage.setItem('userId', shivanand);
+      window.sessionStorage.setItem('userId', shivanand);*/
 
     });
   }

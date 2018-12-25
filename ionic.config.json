@@ -1,5 +1,7 @@
 {
   "name": "lfs",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }

@@ -27,6 +27,7 @@ export class UsersPage {
   }
 
   getUsers() {
+    this.commonsProvider.showLoading();
     this.usersProvider.getAllUsers().subscribe(
       data => {
         this.users = data;
@@ -58,6 +59,7 @@ export class UsersPage {
           data.map(credit => total += credit.amount)
           user.totalCredit = total;
         }
+        this.commonsProvider.hideLoading();
       }
     );
   }

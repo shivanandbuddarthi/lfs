@@ -9,4 +9,5 @@ export interface User {
     admin: boolean;
     totalDebt: number;
     totalCredit: number;
+    userImg?: string;
 }

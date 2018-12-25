@@ -6,10 +6,16 @@ import { CreditsPage } from '../credits/credits';
 import { UsersPage } from '../users/users';
 import { User } from '../../model/user';
 import { UsersProvider } from '../../providers/users/users';
+import { NativeStorage } from '@ionic-native/native-storage';
+import { NavController } from 'ionic-angular';
+import { LoginPage } from '../login/login';
+import { Platform } from 'ionic-angular';
 
 @Component({
   templateUrl: 'tabs.html',
-  styles: ['./tabs.css']
+  styles: ['./tabs.css'],
+  providers: [NativeStorage]
+
 })
 export class TabsPage {
 
@@ -21,16 +27,37 @@ export class TabsPage {
 
   loggedInUser: User;
 
-  constructor(public usersProvider: UsersProvider) {
+  constructor(public usersProvider: UsersProvider, private navCtrl: NavController
+    , private nativeStorage: NativeStorage, public platform: Platform
+  ) {
+    this.platform.ready()
+      .then(readySource => {
+        console.log('Platform ready from', readySource);
+        this.getLoggedInUser(readySource, this);
+      });
 
-    this.getUser(window.sessionStorage.getItem('userId'));
+  }
 
+  getLoggedInUser(readySource: string, tabsPage: TabsPage) {
+    if (readySource == "dom") {
+      if (window.localStorage.getItem('loggedInUserId')) {
+        tabsPage.getUser(window.localStorage.getItem('loggedInUserId'));
+      }
+    }
+    else {
+      tabsPage.nativeStorage.getItem('loggedInUser')
+        .then(data => {
+          console.log(data);
+          tabsPage.loggedInUser = data;
+        });
+    }
   }
 
   getUser(userId: string) {
     this.usersProvider.getUser(userId).subscribe(
       data => {
         if (data) {
+          console.log(data);
           this.loggedInUser = <User>data[0];
         } else {
           console.error('user doesn\'t exist');
@@ -40,6 +67,6 @@ export class TabsPage {
         console.log(error);
       }
     );
-
   }
+
 }

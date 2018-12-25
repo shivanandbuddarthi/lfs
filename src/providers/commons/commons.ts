@@ -7,23 +7,35 @@ import { Transaction } from '../../model/transaction';
 export class CommonsProvider {
 
     loading: Loading;
+    isLoaderActive: boolean = false;
 
     constructor(public loadingCtrl: LoadingController, public alertCtrl: AlertController) {
         console.log('Hello CommonsProvider Provider');
     }
 
-    showLoading() {
+    showLoading(dismiss?: boolean) {
+        console.log(dismiss + "dismiss");
+
         this.loading = this.loadingCtrl.create({
             content: "Please wait...",
-            dismissOnPageChange: true,
+            dismissOnPageChange: false,
             spinner: 'ios',
-            duration: 3000
+            // duration: 10000
         });
         this.loading.present();
+        this.isLoaderActive = true;
+        this.loading.onDidDismiss(() => {
+            this.isLoaderActive = false;
+        });
     }
 
     hideLoading() {
-        this.loading.dismiss();
+        console.log("isloaderactive", this.isLoaderActive);
+
+        this.isLoaderActive && this.loading.dismiss().catch(
+            err => console.error(err)
+
+        );
     }
 
     showAlert(title: string, message: string, goBack?: boolean, nav?: NavController) {

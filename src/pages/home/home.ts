@@ -1,20 +1,23 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import { Credit } from '../../model/credit';
-import { CreditsProvider } from '../../providers/credits/credits';
-import { Debt } from '../../model/debt';
-import { DebtsProvider } from '../../providers/debts/debts';
+import { Component, Input } from '@angular/core';
+import { NavController, NavParams, Platform } from 'ionic-angular';
+import { NativeStorage } from '@ionic-native/native-storage';
 import { Transaction } from '../../model/transaction';
+import { Credit } from '../../model/credit';
+import { Debt } from '../../model/debt';
 import { User } from '../../model/user';
+import { CreditsProvider } from '../../providers/credits/credits';
+import { DebtsProvider } from '../../providers/debts/debts';
 import { UsersProvider } from '../../providers/users/users';
+import { CommonsProvider } from '../../providers/commons/commons';
 import { AddUserPage } from '../add-user/add-user';
 import { AddDebtPage } from '../add-debt/add-debt';
-import { CommonsProvider } from '../../providers/commons/commons';
 import { AddCreditPage } from '../add-credit/add-credit';
+import { LoginPage } from '../login/login';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
+  providers: [NativeStorage]
 })
 export class HomePage {
 
@@ -29,24 +32,63 @@ export class HomePage {
 
   transactionListconfig: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController, public navParams: NavParams, private platform: Platform,
     public creditsProvider: CreditsProvider, public debtsProvider: DebtsProvider, public usersProvider: UsersProvider,
-    private commonsProvider: CommonsProvider) {
+    private commonsProvider: CommonsProvider, private nativeStorage: NativeStorage) {
 
     if (this.navParams.get('user') != null) {
       this.user = this.navParams.get('user');
     } else {
       this.user = this.usersProvider.getBlankUserObject();
     }
+    this.platform.ready()
+      .then(readySource => {
+        commonsProvider.showLoading();
+        this.getLoggedInUser(readySource, this);
+      });
+  }
 
-    this.getUser(window.sessionStorage.getItem('userId'));
+  getLoggedInUser(readySource: string, homePage: HomePage) {
+    if (readySource == "dom") {
+      if (window.localStorage.getItem('loggedInUserId')) {
+        homePage.getUser(window.localStorage.getItem('loggedInUserId'));
+      }
+      else {
+        homePage.navCtrl.setRoot(LoginPage);
+      }
+    }
+    else {
+      homePage.nativeStorage.getItem('loggedInUser')
+        .then(data => {
+          console.log(data);
+          homePage.loggedInUser = data;
+          if (homePage.loggedInUser.admin && homePage.user.firstName) {
+            homePage.displayUser = homePage.user;
+          } else {
+            homePage.displayUser = homePage.loggedInUser;
+          }
+
+          //this.userImg = this.displayUser.firstName.toLocaleLowerCase().replace(" ", "") + ".jpg";
+
+          homePage.transactionListconfig = {
+            showUser: homePage.loggedInUser.admin,
+            showButtons: homePage.loggedInUser.admin && homePage.user.firstName
+          }
+
+
+          homePage.getCredits();
+          homePage.getDebts();
+
+        }, error => {
+          console.error(error);
+          homePage.navCtrl.setRoot(LoginPage);
+        });
+    }
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
   }
-
-
 
   getUser(userId: string) {
     this.usersProvider.getUser(userId).subscribe(
@@ -59,6 +101,8 @@ export class HomePage {
           } else {
             this.displayUser = this.loggedInUser;
           }
+
+          //this.userImg = this.displayUser.firstName.toLocaleLowerCase().replace(" ", "") + ".jpg";
 
           this.transactionListconfig = {
             showUser: this.loggedInUser.admin,
@@ -102,6 +146,7 @@ export class HomePage {
             }, this
           );
         }
+
       },
       error => {
         console.log(error)
@@ -121,9 +166,11 @@ export class HomePage {
             }, this
           );
         }
+        this.commonsProvider.hideLoading();
       },
       error => {
-        console.log(error)
+        console.log(error);
+        this.commonsProvider.hideLoading();
       }
     );
   }
@@ -159,13 +206,38 @@ export class HomePage {
   }
 
   deleteUserConfirm(userObj: User) {
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.usersProvider.getUserDocument(userObj).subscribe(
       data => {
         console.log(data);
         if (data.docs.length > 0) {
           this.usersProvider.deleteUser(data.docs[0].id)
             .then(data => {
+              const debtObj = this.debtsProvider.createDebtObj(userObj.userId);
+              const creditObj = this.creditsProvider.createCreditObj(userObj.userId);
+
+              this.debtsProvider.getDebtDocument(debtObj).subscribe(
+                data => {
+                  console.log("deleteuserDebts:", data);
+                  for (let doc of data.docs) {
+                    this.debtsProvider.deleteDebtDocument(doc.id)
+                      .then(data => console.log("user debt deleted"))
+                      .catch(err => console.error(err));
+                  }
+                },
+              );
+
+              this.creditsProvider.getCreditDocument(creditObj).subscribe(
+                data => {
+                  console.log("deleteuserCredts:", data);
+                  for (let doc of data.docs) {
+                    this.creditsProvider.deleteCreditDocument(doc.id)
+                      .then(data => console.log("user credit deleted"))
+                      .catch(err => console.error(err));
+                  }
+
+                }
+              );
               this.commonsProvider.showAlert("Success", "User '" + userObj.firstName + "' deleted successfully", true, this.navCtrl)
             })
             .catch(error => {
@@ -176,11 +248,15 @@ export class HomePage {
         else {
           throw new Error("User doesn't exist");
         }
+        this.commonsProvider.hideLoading();
       },
       error => {
         console.log(error);
+        this.commonsProvider.hideLoading();
       }
     );
+
+
   }
 
 
@@ -201,7 +277,7 @@ export class HomePage {
 
   deleteTransactionConfirm(transaction: Transaction) {
     let docId;
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     if (transaction.type.toUpperCase() == 'DR') {
       this.debtsProvider.getDebtDocument(<Debt>transaction).subscribe(
         data => {
@@ -220,8 +296,12 @@ export class HomePage {
           } else {
             throw new Error("Record not found");
           }
+          this.commonsProvider.hideLoading();
         },
-        error => console.error(error)
+        error => {
+          console.error(error);
+          this.commonsProvider.hideLoading();
+        }
       );
     } else {
       this.creditsProvider.getCreditDocument(<Credit>transaction).subscribe(
@@ -241,8 +321,12 @@ export class HomePage {
           } else {
             throw new Error("Record not found");
           }
+          this.commonsProvider.hideLoading();
         },
-        error => console.error(error)
+        error => {
+          console.error(error);
+          this.commonsProvider.hideLoading();
+        }
       );
     }
   }

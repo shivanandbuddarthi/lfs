@@ -6,7 +6,7 @@
 
 
 <ion-content padding>
-  <ion-list no-lines *ngIf="loggedInUser">
+  <!-- <ion-list no-lines *ngIf="loggedInUser">
     <ion-item>
       <ion-thumbnail item-start>
         <img src="assets/imgs/myAvatar.svg">
@@ -20,13 +20,19 @@
         <strong>{{totalDebt | currency:'INR' }}</strong>
       </h6>
     </ion-item>
-  </ion-list>
+  </ion-list>-->
+  <user-info [loggedInUser]="loggedInUser" [displayUser]="loggedInUser" [totalDebt]="totalDebt"></user-info>
 
   <hr/>
   <transaction-list [trasactions]="debts" [config]="transactionListconfig" (updateEvent)="goToUpdateDebtPage($event)" (deleteEvent)="deleteDebt($event)"></transaction-list>
 
+  <ion-fab *ngIf="loggedInUser?.admin" right bottom>
+    <button ion-fab color="primary" (click)="goToAddDebtPage()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>
 
-<ion-footer text-center>
+<!--<ion-footer text-center>
   <button *ngIf="loggedInUser?.admin" ion-button color="primary" (click)="goToAddDebtPage()">Add Debt</button>
-</ion-footer>
+</ion-footer>-->

@@ -79,7 +79,7 @@ export class AddCreditPage {
   addCredit() {
     let creditObj: Credit = this.createCreditObj(this.creditForm.value);
     console.log(creditObj);
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.creditProvider.addCreditDocument(creditObj)
       .then(data => {
         this.commonsProvider.showAlert(
@@ -88,16 +88,18 @@ export class AddCreditPage {
           true,
           this.navCtrl
         );
+        this.commonsProvider.hideLoading();
       })
       .catch(error => {
         console.error("Error", error);
+        this.commonsProvider.hideLoading();
       });
   }
 
   updateCredit() {
     let newCreditObj: Credit = this.createCreditObj(this.creditForm.value);
     console.log(newCreditObj);
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.creditProvider.updateCreditDocument(this.creditDocId, newCreditObj)
       .then(data => {
         this.commonsProvider.showAlert(
@@ -105,9 +107,11 @@ export class AddCreditPage {
           "Credit Updated successfully for " + newCreditObj.userId,
           true,
           this.navCtrl);
+        this.commonsProvider.hideLoading();
       })
       .catch(error => {
         console.error("Error", error);
+        this.commonsProvider.hideLoading();
       });
   }
 

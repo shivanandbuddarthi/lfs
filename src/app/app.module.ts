@@ -14,17 +14,19 @@ import { CreditsModule } from '../modules/credits.module';
 import { CommonsModule } from '../modules/commons.module';
 import { UsersModule } from '../modules/users.module';
 import { HomePage } from '../pages/home/home';
+import { AuthModule } from '../modules/auth.module';
 
 @NgModule({
   declarations: [
     MyApp,
     TabsPage,
-    HomePage
+    HomePage,
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(environment.firebase),
+    AuthModule,
     DebtsModule,
     CreditsModule,
     UsersModule,
@@ -34,7 +36,7 @@ import { HomePage } from '../pages/home/home';
   entryComponents: [
     MyApp,
     TabsPage,
-    HomePage
+    HomePage,
   ],
   providers: [
     StatusBar,

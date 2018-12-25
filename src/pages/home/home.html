@@ -7,10 +7,10 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list no-lines *ngIf="displayUser?.firstName">
+  <!--<ion-list no-lines *ngIf="displayUser?.firstName">
     <ion-item>
       <ion-thumbnail item-start>
-        <img src="assets/imgs/myAvatar.svg">
+        <img src="assets/imgs/{{userImg}}">
       </ion-thumbnail>
       <h2>{{displayUser?.firstName}} {{displayUser.lastName}}</h2>
       <h3>{{displayUser.userId}}</h3>
@@ -28,25 +28,41 @@
         </button>
       </div>
     </ion-item>
-  </ion-list>
-
+  </ion-list>-->
   <!--<ion-card class="UserCard" text-center padding>
     <p>Available balance</p>
     <h1>{{totalCredit - totalDebt | currency:'INR'}}</h1>
   </ion-card>-->
 
-  <ion-badge>
+  <user-info [loggedInUser]="loggedInUser" [displayUser]="displayUser" (updateEvent)="goToUpdateUserPage($event)" (deleteEvent)="deleteUser($event)"></user-info>
+
+  <ion-badge *ngIf="totalCredit">
     <p>Outstanding Balance</p>
     <h1>{{totalCredit - totalDebt | currency:'INR'}}</h1>
   </ion-badge>
 
   <hr/>
-  <transaction-list [trasactions]="debts.concat(credits)?.sort(sortByDate)" [config]="transactionListconfig" (updateEvent)="updateTransaction($event)"
-    (deleteEvent)="deleteTransaction($event)"></transaction-list>
+  <transaction-list [trasactions]="debts.concat(credits)?.sort(commonsProvider.sortByDate).slice(0,5)" [config]="transactionListconfig"
+    (updateEvent)="updateTransaction($event)" (deleteEvent)="deleteTransaction($event)"></transaction-list>
+
+
+  <ion-fab bottom right *ngIf="loggedInUser?.admin && user?.firstName">
+    <button ion-fab>
+      <ion-icon name="add"></ion-icon>
+    </button>
+    <ion-fab-list side="top">
+      <button ion-fab (click)="goToAddCreditPage()">
+        <ion-icon large name="add-circle"></ion-icon>
+      </button>
+      <button ion-fab (click)="goToAddDebtPage()">
+        <ion-icon large name="remove-circle"></ion-icon>
+      </button>
+    </ion-fab-list>
+  </ion-fab>
 
 </ion-content>
 
-<ion-footer text-center *ngIf="loggedInUser?.admin && user?.firstName">
+<!--<ion-footer text-center *ngIf="loggedInUser?.admin && user?.firstName">
   <button ion-button color="secondary" (click)="goToAddCreditPage()">Add Credit</button>
   <button ion-button color="danger" (click)="goToAddDebtPage()">Add Debt</button>
-</ion-footer>
+</ion-footer>-->

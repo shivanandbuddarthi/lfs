@@ -1,22 +1,17 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Platform } from 'ionic-angular';
 import { AddCreditPage } from '../add-credit/add-credit';
 import { CreditsProvider } from '../../providers/credits/credits';
 import { Credit } from '../../model/credit';
 import { User } from '../../model/user';
 import { CommonsProvider } from '../../providers/commons/commons';
 import { UsersProvider } from '../../providers/users/users';
-
-/**
- * Generated class for the CreditsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { NativeStorage } from '@ionic-native/native-storage';
 
 @Component({
   selector: 'page-credits',
   templateUrl: 'credits.html',
+  providers: [NativeStorage]
 })
 export class CreditsPage {
 
@@ -26,14 +21,42 @@ export class CreditsPage {
   loggedInUser: User;
   transactionListconfig: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage, private platform: Platform,
     private creditsProvider: CreditsProvider, private usersProvider: UsersProvider
     , private commonsProvider: CommonsProvider) {
-    this.getUser(window.sessionStorage.getItem('userId'));
+
+    this.platform.ready()
+      .then(readySource => {
+        this.commonsProvider.showLoading();
+        this.getLoggedInUser(readySource, this);
+      });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CreditsPage');
+  }
+
+  getLoggedInUser(readySource: string, creditsPage: CreditsPage) {
+    if (readySource == "dom") {
+      if (window.localStorage.getItem('loggedInUserId')) {
+        creditsPage.getUser(window.localStorage.getItem('loggedInUserId'));
+      }
+    }
+    else {
+      creditsPage.nativeStorage.getItem('loggedInUser')
+        .then(data => {
+          console.log(data);
+          creditsPage.loggedInUser = data;
+          creditsPage.transactionListconfig = {
+            showUser: creditsPage.loggedInUser.admin,
+            showButtons: creditsPage.loggedInUser.admin
+          }
+          console.log(creditsPage.loggedInUser)
+          creditsPage.getCredits();
+        }, error => {
+          console.error(error);
+        });
+    }
   }
 
   getUser(userId: string) {
@@ -72,6 +95,7 @@ export class CreditsPage {
               }, this
             );
           }
+          this.commonsProvider.hideLoading();
         }
       );
   }
@@ -110,7 +134,7 @@ export class CreditsPage {
   }
 
   deleteCreditConfirm(creditObj) {
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.creditsProvider.getCreditDocument(creditObj).subscribe(
       data => {
         if (data.docs.length > 0) {
@@ -129,9 +153,11 @@ export class CreditsPage {
         else {
           console.error("Document doesn't exist");
         }
+        this.commonsProvider.hideLoading();
       },
       error => {
         console.error(error);
+        this.commonsProvider.hideLoading();
       }
     );
 

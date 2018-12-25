@@ -6,13 +6,6 @@ import { User } from '../../model/user';
 import { domain } from '../../constants/app.constants';
 import { CommonsProvider } from '../../providers/commons/commons';
 
-/**
- * Generated class for the AddUserPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @Component({
   selector: 'page-add-user',
   templateUrl: 'add-user.html',
@@ -68,20 +61,25 @@ export class AddUserPage {
 
   addUser() {
     let userObj: User = this.userForm.value;
-    userObj.userId = userObj.firstName.toLowerCase() + domain;
+    userObj.userId = userObj.firstName.toLowerCase().replace(" ", "") + domain;
     console.log(userObj);
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.userProvider.addUser(userObj)
       .then(
         data => {
           console.log(data);
-          this.commonsProvider.showAlert('Success', 'User Added successfully...', true, this.navCtrl);
+          this.commonsProvider.showAlert(
+            'Success',
+            'User Added successfully...',
+            true, this.navCtrl);
+          this.commonsProvider.hideLoading();
         }
       )
       .catch(
         error => {
           console.log(error);
           this.commonsProvider.showAlert('Error', error);
+          this.commonsProvider.hideLoading();
         }
       );
   }
@@ -89,13 +87,18 @@ export class AddUserPage {
   updateUser() {
     let newUserObj = this.userForm.value;
     console.log(newUserObj);
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.userProvider.updateUser(this.userDocId, newUserObj)
       .then(data => {
-        this.commonsProvider.showAlert("Success", "User Updated successfully", true, this.navCtrl);
+        this.commonsProvider.showAlert(
+          "Success",
+          "User Updated successfully",
+          true, this.navCtrl);
+        this.commonsProvider.hideLoading();
       })
       .catch(error => {
         this.commonsProvider.showAlert("Error", error);
+        this.commonsProvider.hideLoading();
       });
   }
 }

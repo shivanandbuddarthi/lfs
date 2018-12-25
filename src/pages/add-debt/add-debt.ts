@@ -81,7 +81,7 @@ export class AddDebtPage {
   addDebt() {
     let debtObj: Debt = this.createDebtObj(this.debtForm.value);
     console.log(debtObj);
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.debtProvider.addDebtDocument(debtObj)
       .then(data => {
         this.commonsProvider.showAlert(
@@ -90,16 +90,18 @@ export class AddDebtPage {
           true,
           this.navCtrl
         );
+        this.commonsProvider.hideLoading();
       })
       .catch(error => {
         console.error("Error", error);
+        this.commonsProvider.hideLoading();
       });
   }
 
   updateDebt() {
     let newDebtObj: Debt = this.createDebtObj(this.debtForm.value);
     console.log(newDebtObj);
-    this.commonsProvider.showLoading();
+    this.commonsProvider.showLoading(true);
     this.debtProvider.updateDebtDocument(this.debtDocId, newDebtObj)
       .then(data => {
         this.commonsProvider.showAlert(
@@ -107,9 +109,11 @@ export class AddDebtPage {
           "Debt Updated successfully for" + newDebtObj.userId,
           true,
           this.navCtrl);
+        this.commonsProvider.hideLoading();
       })
       .catch(error => {
         console.error("Error", error);
+        this.commonsProvider.hideLoading();
       });
   }
 

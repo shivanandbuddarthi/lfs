@@ -4,9 +4,10 @@ import { BrowserModule } from "@angular/platform-browser";
 import { TransactionListComponent } from "../components/transaction-list/transaction-list";
 import { FormsModule } from "@angular/forms";
 import { CommonsProvider } from "../providers/commons/commons";
+import { UserInfoComponent } from "../components/user-info/user-info";
 
 @NgModule({
-    declarations: [TransactionListComponent],
+    declarations: [TransactionListComponent, UserInfoComponent],
     imports: [
         BrowserModule,
         IonicModule,
@@ -15,7 +16,7 @@ import { CommonsProvider } from "../providers/commons/commons";
     providers: [
         CommonsProvider
     ],
-    exports: [TransactionListComponent],
+    exports: [TransactionListComponent, UserInfoComponent],
     entryComponents: []
 })
 export class CommonsModule { }

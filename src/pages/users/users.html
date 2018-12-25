@@ -17,7 +17,7 @@
   <ion-list>
     <button ion-item *ngFor="let user of users" (click)="gotToUserDetailsPage(user)">
       <ion-thumbnail item-start>
-        <img src="assets/imgs/myAvatar.svg">
+        <img [src]="user?.userImg ? user.userImg : 'assets/imgs/myAvatar.svg'" />
         <!--<img src="https://firebasestorage.googleapis.com/v0/b/test-aaa75.appspot.com/o/shivanand.jpg?alt=media&token=e9f56b42-50b2-4ab6-b64d-777d607a92cc"
           (click)="gotToUserDetailsPage(user)">-->
       </ion-thumbnail>
@@ -37,8 +37,13 @@
       </button>-->
     </button>
   </ion-list>
+  <ion-fab right bottom>
+    <button ion-fab color="primary" (click)="gotToAddUserPage()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>
 
-<ion-footer text-center>
+<!--<ion-footer text-center>
   <button ion-button color="primary" (click)="gotToAddUserPage()">Add User</button>
-</ion-footer>
+</ion-footer>-->
