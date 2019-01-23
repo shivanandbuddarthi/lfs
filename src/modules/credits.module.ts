@@ -7,7 +7,6 @@ import { CreditsProvider } from "../providers/credits/credits";
 import { CreditsPage } from "../pages/credits/credits";
 import { AddCreditPage } from "../pages/add-credit/add-credit";
 import { CommonsModule } from "./commons.module";
-import { UsersProvider } from "../providers/users/users";
 
 
 

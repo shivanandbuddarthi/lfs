@@ -34,22 +34,23 @@ export class DebtsPage {
 
   getLoggedInUser(readySource: string, debtsPage: DebtsPage) {
     if (readySource == "dom") {
-      if (window.localStorage.getItem('loggedInUserId')) {
-        debtsPage.getUser(window.localStorage.getItem('loggedInUserId'));
+      if (window.localStorage.getItem('loggedInUser')) {
+        debtsPage.getUser(JSON.parse(window.localStorage.getItem('loggedInUser')).email);
       }
     }
     else {
       debtsPage.nativeStorage.getItem('loggedInUser')
         .then(data => {
           console.log(data);
-          debtsPage.loggedInUser = data;
+          debtsPage.getUser(data.email);
+          /*debtsPage.loggedInUser = data;
 
           debtsPage.transactionListconfig = {
             showUser: debtsPage.loggedInUser.admin,
             showButtons: debtsPage.loggedInUser.admin
           }
           console.log(debtsPage.loggedInUser)
-          debtsPage.getDebts();
+          debtsPage.getDebts();*/
         }, error => {
           console.error(error);
         });

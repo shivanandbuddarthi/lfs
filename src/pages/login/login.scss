@@ -1,3 +1,16 @@
 page-login {
-
-}
+    h3,h6,ion-thumbnail{
+        text-align: center;
+    }
+    ion-thumbnail img{
+        height: 10em; 
+        width: 15em; 
+        border: 2px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 5px gray;
+        display: inline-block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    }
+    

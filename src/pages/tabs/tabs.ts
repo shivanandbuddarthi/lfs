@@ -7,8 +7,6 @@ import { UsersPage } from '../users/users';
 import { User } from '../../model/user';
 import { UsersProvider } from '../../providers/users/users';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { NavController } from 'ionic-angular';
-import { LoginPage } from '../login/login';
 import { Platform } from 'ionic-angular';
 
 @Component({
@@ -27,8 +25,7 @@ export class TabsPage {
 
   loggedInUser: User;
 
-  constructor(public usersProvider: UsersProvider, private navCtrl: NavController
-    , private nativeStorage: NativeStorage, public platform: Platform
+  constructor(public usersProvider: UsersProvider, private nativeStorage: NativeStorage, public platform: Platform
   ) {
     this.platform.ready()
       .then(readySource => {
@@ -40,15 +37,16 @@ export class TabsPage {
 
   getLoggedInUser(readySource: string, tabsPage: TabsPage) {
     if (readySource == "dom") {
-      if (window.localStorage.getItem('loggedInUserId')) {
-        tabsPage.getUser(window.localStorage.getItem('loggedInUserId'));
+      if (window.localStorage.getItem('loggedInUser')) {
+        tabsPage.getUser(JSON.parse(window.localStorage.getItem('loggedInUser')).email);
       }
     }
     else {
       tabsPage.nativeStorage.getItem('loggedInUser')
         .then(data => {
           console.log(data);
-          tabsPage.loggedInUser = data;
+          tabsPage.getUser(data.email);
+          //tabsPage.loggedInUser = data;
         });
     }
   }

@@ -1,6 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs-compat';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../../model/user';
 
@@ -58,9 +56,26 @@ export class UsersProvider {
   }
 
   getUser(userId: string) {
+    if (userId.indexOf("gmail.com") != -1) {
+      return this.getUserByEMail(userId);
+    }
+    else {
+      return this.getUserByUserId(userId);
+    }
+  }
+
+  getUserByUserId(userId: String) {
     return this.db.collection('users', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
       if (userId != null) { query = query.where('userId', '==', userId) };
+      return query;
+    }).valueChanges();
+  }
+
+  getUserByEMail(email: String) {
+    return this.db.collection('users', ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      if (email != null) { query = query.where('email', '==', email) };
       return query;
     }).valueChanges();
   }

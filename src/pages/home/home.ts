@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, Platform } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { Transaction } from '../../model/transaction';
@@ -50,8 +50,8 @@ export class HomePage {
 
   getLoggedInUser(readySource: string, homePage: HomePage) {
     if (readySource == "dom") {
-      if (window.localStorage.getItem('loggedInUserId')) {
-        homePage.getUser(window.localStorage.getItem('loggedInUserId'));
+      if (window.localStorage.getItem('loggedInUser')) {
+        homePage.getUser(JSON.parse(window.localStorage.getItem('loggedInUser')).email);
       }
       else {
         homePage.navCtrl.setRoot(LoginPage);
@@ -61,14 +61,12 @@ export class HomePage {
       homePage.nativeStorage.getItem('loggedInUser')
         .then(data => {
           console.log(data);
-          homePage.loggedInUser = data;
+          /*homePage.loggedInUser = data;
           if (homePage.loggedInUser.admin && homePage.user.firstName) {
             homePage.displayUser = homePage.user;
           } else {
             homePage.displayUser = homePage.loggedInUser;
           }
-
-          //this.userImg = this.displayUser.firstName.toLocaleLowerCase().replace(" ", "") + ".jpg";
 
           homePage.transactionListconfig = {
             showUser: homePage.loggedInUser.admin,
@@ -78,6 +76,8 @@ export class HomePage {
 
           homePage.getCredits();
           homePage.getDebts();
+          */
+          homePage.getUser(data.email);
 
         }, error => {
           console.error(error);
@@ -101,8 +101,6 @@ export class HomePage {
           } else {
             this.displayUser = this.loggedInUser;
           }
-
-          //this.userImg = this.displayUser.firstName.toLocaleLowerCase().replace(" ", "") + ".jpg";
 
           this.transactionListconfig = {
             showUser: this.loggedInUser.admin,

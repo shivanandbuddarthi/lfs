@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoadingController, Loading, AlertController, NavController } from 'ionic-angular';
 import { Transaction } from '../../model/transaction';

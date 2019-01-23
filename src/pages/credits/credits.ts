@@ -38,25 +38,27 @@ export class CreditsPage {
 
   getLoggedInUser(readySource: string, creditsPage: CreditsPage) {
     if (readySource == "dom") {
-      if (window.localStorage.getItem('loggedInUserId')) {
-        creditsPage.getUser(window.localStorage.getItem('loggedInUserId'));
+      if (window.localStorage.getItem('loggedInUser')) {
+        creditsPage.getUser(JSON.parse(window.localStorage.getItem('loggedInUser')).email);
       }
     }
     else {
       creditsPage.nativeStorage.getItem('loggedInUser')
         .then(data => {
           console.log(data);
-          creditsPage.loggedInUser = data;
+          creditsPage.getUser(data.email);
+          /*creditsPage.loggedInUser = data;
           creditsPage.transactionListconfig = {
             showUser: creditsPage.loggedInUser.admin,
             showButtons: creditsPage.loggedInUser.admin
           }
           console.log(creditsPage.loggedInUser)
-          creditsPage.getCredits();
+          creditsPage.getCredits();*/
         }, error => {
           console.error(error);
         });
     }
+
   }
 
   getUser(userId: string) {

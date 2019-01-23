@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
-import { Observable } from 'rxjs-compat';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Credit } from '../../model/credit';
 
 @Injectable()
