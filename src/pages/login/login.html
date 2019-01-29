@@ -32,7 +32,18 @@
 
   <div id="firebaseui-auth-container"></div>-->
 
-  <!--<form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+  <br/>
+  <h3>Lucky Financial Services</h3>
+  <ion-thumbnail>
+    <img src="assets/imgs/repay.jpg">
+  </ion-thumbnail>
+  <p>Now you can track all your borrowings and repayments on the go.</p>
+  <hr/>
+  <h6>Please sign-in to continue</h6>
+
+  <!-- <div id="firebaseui-auth-container"></div> -->
+
+  <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
     <ion-item>
       <ion-label floating>Username</ion-label>
       <ion-input type="text" formControlName="userId"></ion-input>
@@ -44,18 +55,6 @@
     <div padding>
       <button ion-button type="submit" block [disabled]="!loginForm.valid">Login</button>
     </div>
-  </form>-->
-
-
-  <br/>
-  <h3 class="text-center">Lucky Financial Services</h3>
-  <ion-thumbnail>
-    <img src="assets/imgs/repay.jpg">
-  </ion-thumbnail>
-  <p>Now you can track all your borrowings and repayments on the go.</p>
-  <hr/>
-  <h6>Please sign-in to continue</h6>
-
-  <div id="firebaseui-auth-container"></div>
+  </form>
 
 </ion-content>

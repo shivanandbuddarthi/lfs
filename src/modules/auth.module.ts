@@ -5,7 +5,6 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { IonicModule } from "ionic-angular";
 import { BrowserModule } from "@angular/platform-browser";
 import { LoginPage } from "../pages/login/login";
-import { FirebaseuiProvider } from "../providers/firebaseui/firebaseui";
 import { NativeStorage } from "@ionic-native/native-storage";
 
 @NgModule({
@@ -20,7 +19,7 @@ import { NativeStorage } from "@ionic-native/native-storage";
     ],
     providers: [
         AuthProvider,
-        FirebaseuiProvider,
+        //FirebaseuiProvider,
         NativeStorage
     ],
     exports: [

@@ -7,7 +7,8 @@ import { UsersPage } from '../users/users';
 import { User } from '../../model/user';
 import { UsersProvider } from '../../providers/users/users';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { Platform } from 'ionic-angular';
+import { Platform, NavController } from 'ionic-angular';
+import { LoginPage } from '../login/login';
 
 @Component({
   templateUrl: 'tabs.html',
@@ -25,18 +26,22 @@ export class TabsPage {
 
   loggedInUser: User;
 
-  constructor(public usersProvider: UsersProvider, private nativeStorage: NativeStorage, public platform: Platform
+  isDom: boolean;
+
+  constructor(public usersProvider: UsersProvider, private nativeStorage: NativeStorage,
+    public platform: Platform, public navCtrl: NavController
   ) {
     this.platform.ready()
       .then(readySource => {
         console.log('Platform ready from', readySource);
-        this.getLoggedInUser(readySource, this);
+        this.isDom = readySource == "dom";
+        this.getLoggedInUser(this);
       });
 
   }
 
-  getLoggedInUser(readySource: string, tabsPage: TabsPage) {
-    if (readySource == "dom") {
+  getLoggedInUser(tabsPage: TabsPage) {
+    if (tabsPage.isDom) {
       if (window.localStorage.getItem('loggedInUser')) {
         tabsPage.getUser(JSON.parse(window.localStorage.getItem('loggedInUser')).email);
       }
@@ -65,6 +70,25 @@ export class TabsPage {
         console.log(error);
       }
     );
+  }
+
+  logOut() {
+    if (this.isDom) {
+      window.localStorage.removeItem('loggedInUser');
+      this.navCtrl.setRoot(LoginPage);
+    }
+    else {
+      this.nativeStorage.remove('loggedInUser')
+        .then(
+          data => {
+            console.log("user data removed from storage");
+            this.navCtrl.setRoot(LoginPage);
+          }
+        ).catch(
+          err => console.error(err)
+        );
+
+    }
   }
 
 }

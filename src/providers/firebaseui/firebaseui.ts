@@ -5,7 +5,6 @@ import * as firebaseui from 'firebaseui';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { emails } from '../../constants/app.constants';
-import { NativeStorage } from '@ionic-native/native-storage';
 import { LoginPage } from '../../pages/login/login';
 
 @Injectable()
