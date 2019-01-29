@@ -1,8 +1,8 @@
-<ion-header>
+<!-- <ion-header>
   <ion-navbar>
     <ion-title>Debts</ion-title>
   </ion-navbar>
-</ion-header>
+</ion-header> -->
 
 
 <ion-content padding>
@@ -27,7 +27,7 @@
   <transaction-list [trasactions]="debts" [config]="transactionListconfig" (updateEvent)="goToUpdateDebtPage($event)" (deleteEvent)="deleteDebt($event)"></transaction-list>
 
   <ion-fab *ngIf="loggedInUser?.admin" right bottom>
-    <button ion-fab color="primary" (click)="goToAddDebtPage()">
+    <button ion-fab color="danger" (click)="goToAddDebtPage()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>

@@ -1,3 +1,18 @@
 user-info {
+    .item-md h2{
+        color:map-get($colors, mycolor1);
+        font-size:1.9rem;
+    }
+    
+    .item-md p.dr small{
+        color:map-get($colors, danger);;
+    }
+    .item-md p.cr small{
+        color:map-get($colors, secondary);;
+    }
 
+    .item-md p,.item-md h3{
+        color:map-get($colors, mycolor2);
+        font-size: 1.6rem;
+    }
 }

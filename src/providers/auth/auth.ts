@@ -10,10 +10,11 @@ export class AuthProvider {
   }
 
   loginWithUserNamePassword(username: string, password: string) {
-    if (username.indexOf("gmail.com") == -1 && username.indexOf(domain) == -1) {
+    if (username.toLowerCase().indexOf("gmail.com") == -1 && username.toLowerCase().indexOf(domain) == -1) {
       username += domain;
     }
     return this.afAuth.auth.signInWithEmailAndPassword(username, password);
   }
+
 
 }

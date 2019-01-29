@@ -1,8 +1,19 @@
 transaction-list {
-ion-item p.dr{
-    color:#f53d3d;
-}
-ion-item p.cr{
-    color:#32db64;
-}
+    .item-md h3,
+    .item-md p span{
+        color:map-get($colors, mycolor1);
+        font-size:1.9rem;
+    }
+    
+    .item-md p.dr small{
+        color:map-get($colors, danger);;
+    }
+    .item-md p.cr small{
+        color:map-get($colors, secondary);;
+    }
+
+    .item-md p{
+        color:map-get($colors, mycolor2);
+        font-size: 1.6rem;
+    }
 }

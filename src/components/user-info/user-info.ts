@@ -20,16 +20,21 @@ export class UserInfoComponent {
   @Input()
   totalDebt: number;
 
+  @Input()
+  showLogout: boolean;
+
   @Output()
   deleteEvent = new EventEmitter<User>();
 
   @Output()
   updateEvent = new EventEmitter<User>();
 
+  @Output()
+  logoutEvent = new EventEmitter<User>();
+
   constructor() {
     console.log('Hello UserInfoComponent Component');
   }
-
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserInfoComponent');

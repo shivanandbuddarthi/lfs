@@ -16,4 +16,9 @@ page-home {
         background-color: #f5821f;
         border-radius: 10px;
       }
+
+      .item-md ion-thumbnail ion-img, .item-md ion-thumbnail img{
+          width:100px;
+          height: 100px;
+      }
 }

@@ -5,16 +5,20 @@
     </ion-thumbnail>
     <h2>{{displayUser?.firstName}} {{displayUser.lastName}}</h2>
     <h3>{{displayUser.userId}}</h3>
-    <p>{{displayUser.dateOfBirth | date}}</p>
-    <p>{{displayUser.gender}}</p>
-    <h6 *ngIf="totalCredit">
-      Total Credit:
-      <strong>{{totalCredit | currency:'INR' }}</strong>
-    </h6>
-    <h6 *ngIf="totalDebt">
-      Total Debt:
-      <strong>{{totalDebt | currency:'INR' }}</strong>
-    </h6>
+    <p *ngIf="showLogout">{{displayUser.dateOfBirth | date}}</p>
+    <p *ngIf="showLogout">{{displayUser.gender}}</p>
+    <div *ngIf="totalCredit">
+      <p>Total Credit:</p>
+      <h2>
+        <strong>{{totalCredit | currency:'INR' }}</strong>
+      </h2>
+    </div>
+    <div *ngIf="totalDebt">
+      <p>Total Debt:</p>
+      <h2>
+        <strong>{{totalDebt | currency:'INR' }}</strong>
+      </h2>
+    </div>
     <div *ngIf="loggedInUser?.admin && loggedInUser!=displayUser">
       <button ion-button clear title="Update" (click)="updateEvent.emit(displayUser)">
         <ion-icon name='settings' is-active="false"></ion-icon>
@@ -23,6 +27,12 @@
       <button ion-button color="danger" clear icon-only title="Delete" (click)="deleteEvent.emit(displayUser)">
         <ion-icon name='trash' is-active="false"></ion-icon>
         &nbsp;Delete
+      </button>
+    </div>
+    <div *ngIf="showLogout && !(loggedInUser?.admin && loggedInUser!=displayUser)">
+      <button ion-button color="danger" clear icon-only title="Logout" (click)="logoutEvent.emit(displayUser)">
+        <ion-icon name='power' is-active="false"></ion-icon>
+        &nbsp;Logout
       </button>
     </div>
   </ion-item>

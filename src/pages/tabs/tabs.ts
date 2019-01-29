@@ -59,7 +59,7 @@ export class TabsPage {
   getUser(userId: string) {
     this.usersProvider.getUser(userId).subscribe(
       data => {
-        if (data) {
+        if (data && data.length > 0) {
           console.log(data);
           this.loggedInUser = <User>data[0];
         } else {
@@ -72,23 +72,6 @@ export class TabsPage {
     );
   }
 
-  logOut() {
-    if (this.isDom) {
-      window.localStorage.removeItem('loggedInUser');
-      this.navCtrl.setRoot(LoginPage);
-    }
-    else {
-      this.nativeStorage.remove('loggedInUser')
-        .then(
-          data => {
-            console.log("user data removed from storage");
-            this.navCtrl.setRoot(LoginPage);
-          }
-        ).catch(
-          err => console.error(err)
-        );
-
-    }
-  }
+  
 
 }

@@ -13,6 +13,7 @@ import { AddUserPage } from '../add-user/add-user';
 import { AddDebtPage } from '../add-debt/add-debt';
 import { AddCreditPage } from '../add-credit/add-credit';
 import { LoginPage } from '../login/login';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 @Component({
   selector: 'page-home',
@@ -32,9 +33,11 @@ export class HomePage {
 
   transactionListconfig: any;
 
+  isDom: boolean;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private platform: Platform,
     public creditsProvider: CreditsProvider, public debtsProvider: DebtsProvider, public usersProvider: UsersProvider,
-    private commonsProvider: CommonsProvider, private nativeStorage: NativeStorage) {
+    private commonsProvider: CommonsProvider, private nativeStorage: NativeStorage, private splashScreen: SplashScreen) {
 
     if (this.navParams.get('user') != null) {
       this.user = this.navParams.get('user');
@@ -44,6 +47,7 @@ export class HomePage {
     this.platform.ready()
       .then(readySource => {
         commonsProvider.showLoading();
+        this.isDom = readySource == "dom";
         this.getLoggedInUser(readySource, this);
       });
   }
@@ -378,6 +382,28 @@ export class HomePage {
 
   goToAddCreditPage() {
     this.navCtrl.push(AddCreditPage, { "creditUserId": this.user.userId });
+  }
+
+  logoutUser(userObj: User) {
+    this.commonsProvider.showLoading(true);
+    if (this.isDom) {
+      window.localStorage.removeItem('loggedInUser');
+      this.splashScreen.show();
+      window.location.reload();
+    }
+    else {
+      this.nativeStorage.remove('loggedInUser')
+        .then(
+          data => {
+            console.log("user data removed from storage");
+            this.splashScreen.show();
+            window.location.reload();
+          }
+        ).catch(
+          err => console.error(err)
+        );
+
+    }
   }
 
 

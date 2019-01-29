@@ -1,7 +1,7 @@
-<ion-header>
+<ion-header *ngIf="user.firstName">
   <ion-navbar>
     <ion-title>
-      User Home
+      {{user.firstName}}
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -34,7 +34,8 @@
     <h1>{{totalCredit - totalDebt | currency:'INR'}}</h1>
   </ion-card>-->
 
-  <user-info [loggedInUser]="loggedInUser" [displayUser]="displayUser" (updateEvent)="goToUpdateUserPage($event)" (deleteEvent)="deleteUser($event)"></user-info>
+  <user-info [loggedInUser]="loggedInUser" [displayUser]="displayUser" [showLogout]="true" (updateEvent)="goToUpdateUserPage($event)"
+    (deleteEvent)="deleteUser($event)" (logoutEvent)="logoutUser($event)"></user-info>
 
   <ion-badge *ngIf="totalCredit">
     <p>Outstanding Balance</p>
